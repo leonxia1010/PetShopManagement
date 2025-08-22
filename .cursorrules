@@ -1,0 +1,277 @@
+# Code Quality and Development Rules
+
+## SOLID Principles
+
+### Single Responsibility Principle (SRP)
+- Each function/class should have one reason to change
+- Keep components focused on a single purpose
+- Separate concerns (auth logic, UI rendering, data fetching)
+
+### Open/Closed Principle (OCP)
+- Code should be open for extension, closed for modification
+- Use interfaces and abstractions for extensibility
+- Prefer composition over inheritance
+
+### Liskov Substitution Principle (LSP)
+- Subtypes must be substitutable for their base types
+- Ensure derived components maintain expected behavior
+
+### Interface Segregation Principle (ISP)
+- Create specific, focused interfaces
+- Avoid forcing clients to depend on unused methods
+
+### Dependency Inversion Principle (DIP)
+- Depend on abstractions, not concretions
+- Use dependency injection for better testability
+
+## TypeScript Standards
+
+### Type Safety
+- Use strict TypeScript configuration
+- Define explicit types for all function parameters and returns
+- Avoid `any` type - use proper type definitions
+- Use union types and generics appropriately
+
+### Interface Design
+```typescript
+// Good: Specific, focused interface
+interface UserAuthData {
+  id: string
+  email: string
+  role: UserRole
+}
+
+// Bad: Overly broad interface
+interface User {
+  // ... 20+ properties for different use cases
+}
+```
+
+## React Best Practices
+
+### Component Structure
+- Use functional components with hooks
+- Keep components under 200 lines
+- Extract custom hooks for reusable logic
+- Use proper prop types and default values
+
+### State Management
+- Use local state for component-specific data
+- Use context for shared application state
+- Minimize prop drilling
+- Use React Query for server state
+
+### Performance
+- Use `useMemo` and `useCallback` for expensive operations
+- Implement proper key props for lists
+- Avoid creating objects/functions in render
+
+## Backend Standards
+
+### API Design
+- Follow RESTful conventions
+- Use consistent error response formats
+- Implement proper HTTP status codes
+- Version APIs appropriately
+
+### Security
+- Always validate and sanitize input
+- Use parameterized queries (Prisma handles this)
+- Implement proper authentication middleware
+- Never expose sensitive data in responses
+
+### Error Handling
+```typescript
+// Good: Structured error handling
+try {
+  const result = await riskyOperation()
+  return { success: true, data: result }
+} catch (error) {
+  logger.error('Operation failed', { error, context })
+  return { success: false, error: 'Operation failed' }
+}
+```
+
+## Code Simplicity and Conciseness
+
+### Principle: Less is More
+- Write minimal, focused code that solves the exact problem
+- Eliminate unnecessary abstractions and complexity
+- Remove dead code immediately
+- Prefer simple solutions over clever ones
+
+### Code Brevity Rules
+- Functions should be under 20 lines when possible
+- Avoid deeply nested conditionals (max 3 levels)
+- Use early returns to reduce nesting
+- Combine variable declarations when logical
+- Use destructuring for cleaner code
+
+### Examples
+```typescript
+// Good: Concise and clear
+const { user, loading } = useAuth()
+if (!user) return <LoginPage />
+if (loading) return <Spinner />
+return <Dashboard user={user} />
+
+// Bad: Verbose and nested
+const authState = useAuth()
+if (authState.user) {
+  if (!authState.loading) {
+    return <Dashboard user={authState.user} />
+  } else {
+    return <Spinner />
+  }
+} else {
+  return <LoginPage />
+}
+```
+
+### Remove Redundancy
+- Eliminate duplicate code through extraction
+- Use utility functions for repeated patterns
+- Consolidate similar components
+- Remove unused imports and variables
+
+## Code Organization
+
+### File Structure
+- Group related files in feature folders
+- Use barrel exports (index.ts) for clean imports
+- Separate concerns: components, hooks, utilities, types
+- Keep file names descriptive and consistent
+
+### Naming Conventions
+- Use PascalCase for components and types
+- Use camelCase for functions and variables
+- Use SCREAMING_SNAKE_CASE for constants
+- Use kebab-case for file names
+
+### Import Organization
+```typescript
+// 1. External libraries
+import React from 'react'
+import { Router } from 'express'
+
+// 2. Internal modules (absolute paths)
+import { authenticateToken } from '@/middleware/auth'
+
+// 3. Relative imports
+import './Component.css'
+```
+
+## Testing Standards
+
+### Unit Tests
+- Test business logic, not implementation details
+- Use descriptive test names
+- Follow AAA pattern: Arrange, Act, Assert
+- Mock external dependencies
+
+### Integration Tests
+- Test critical user flows
+- Test API endpoints with different roles
+- Test error scenarios
+
+## Documentation
+
+### Code Comments
+- Write comments for complex business logic only
+- Use JSDoc for public APIs
+- Avoid obvious comments
+- Update comments when code changes
+
+### README and Documentation
+- Keep setup instructions current
+- Document environment variables
+- Provide example usage
+- Include troubleshooting section
+
+## Performance Guidelines
+
+### Frontend
+- Minimize bundle size
+- Use code splitting for large features
+- Optimize images and assets
+- Implement proper loading states
+
+### Backend
+- Use database indexing appropriately
+- Implement request caching where beneficial
+- Avoid N+1 query problems
+- Monitor API response times
+
+## Git Workflow
+
+### Commit Messages
+**CRITICAL: Never mention AI assistance in commit messages**
+
+Follow conventional commits format:
+```
+type(scope): brief description
+
+feat: add user role-based routing
+fix: resolve auth token validation issue
+refactor: extract auth middleware
+docs: update setup instructions
+test: add auth flow integration tests
+```
+
+Types: feat, fix, docs, style, refactor, test, chore
+
+### Branch Naming
+- `feature/task-description`
+- `fix/bug-description`
+- `refactor/component-name`
+
+### Code Review
+- Keep PRs focused and small
+- Write descriptive PR descriptions
+- Test changes locally before submitting
+- Address all review comments
+
+## Error Handling Standards
+
+### Frontend Error Boundaries
+- Implement error boundaries for critical sections
+- Provide meaningful error messages to users
+- Log errors for debugging
+
+### Backend Error Responses
+```typescript
+// Consistent error format
+{
+  error: "Brief error description",
+  code: "ERROR_CODE",
+  details?: "Additional context for debugging"
+}
+```
+
+## Security Checklist
+
+### Authentication
+- Validate JWT tokens properly
+- Check user permissions on every protected route
+- Implement session timeout
+- Use HTTPS in production
+
+### Data Handling
+- Validate all input data
+- Sanitize user inputs
+- Don't log sensitive information
+- Use environment variables for secrets
+
+## Code Review Checklist
+
+Before committing, verify:
+- [ ] Code follows SOLID principles
+- [ ] TypeScript types are properly defined
+- [ ] Error handling is implemented
+- [ ] Security best practices followed
+- [ ] Performance considerations addressed
+- [ ] Tests added for new functionality
+- [ ] Documentation updated if needed
+- [ ] Commit message follows conventions
+- [ ] No debugging code or console.logs left
+- [ ] Environment variables properly configured
