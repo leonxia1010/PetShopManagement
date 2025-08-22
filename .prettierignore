@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+.env
+*.log
+coverage
+.nyc_output
+.cache
+package-lock.json
+pnpm-lock.yaml
