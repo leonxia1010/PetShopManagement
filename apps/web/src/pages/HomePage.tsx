@@ -23,6 +23,21 @@ const HomePage = () => {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
 
+  // 开发模式自动跳转到对应角色页面
+  React.useEffect(() => {
+    if (import.meta.env.DEV && user?.role) {
+      const roleRoutes = {
+        manager: '/dashboard',
+        clerk: '/bookings', 
+        technician: '/tasks/today'
+      }
+      const targetRoute = roleRoutes[user.role as keyof typeof roleRoutes]
+      if (targetRoute) {
+        navigate(targetRoute, { replace: true })
+      }
+    }
+  }, [user, navigate])
+
   const { data: healthStatus, isLoading } = useQuery({
     queryKey: ['health'],
     queryFn: async () => {

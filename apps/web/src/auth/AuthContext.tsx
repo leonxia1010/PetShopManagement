@@ -22,33 +22,60 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
-    const getInitialSession = async () => {
+    const checkAuth = async () => {
+      // 开发模式检查
+      if (import.meta.env.DEV) {
+        const devUser = localStorage.getItem('dev-user')
+        console.log('Dev mode - checking localStorage:', devUser)
+        if (devUser) {
+          try {
+            const userData = JSON.parse(devUser)
+            console.log('Dev mode - setting user:', userData)
+            setUser(userData)
+            setLoading(false)
+            return
+          } catch (e) {
+            console.log('Dev mode - parse error, clearing localStorage')
+            localStorage.removeItem('dev-user')
+          }
+        }
+      }
+
+      // Get initial session
       const {
         data: { session },
       } = await supabase.auth.getSession()
       
       if (session?.user) {
         await updateUserFromSession(session)
+      } else {
+        setLoading(false)
       }
-      setLoading(false)
     }
 
-    getInitialSession()
+    checkAuth()
+  }, [])
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        await updateUserFromSession(session)
+  // 监听localStorage变化以支持开发模式用户切换
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+
+    const handleStorageChange = () => {
+      const devUser = localStorage.getItem('dev-user')
+      if (devUser) {
+        try {
+          setUser(JSON.parse(devUser))
+        } catch (e) {
+          localStorage.removeItem('dev-user')
+          setUser(null)
+        }
       } else {
         setUser(null)
       }
-      setLoading(false)
-    })
+    }
 
-    return () => subscription.unsubscribe()
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
 
   const updateUserFromSession = async (session: Session) => {
@@ -92,6 +119,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const signOut = async () => {
+    // 开发模式清除本地存储
+    if (import.meta.env.DEV) {
+      localStorage.removeItem('dev-user')
+      setUser(null)
+      return
+    }
+
     const { error } = await supabase.auth.signOut()
     if (error) {
       throw error
@@ -100,6 +134,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const getAccessToken = async (): Promise<string | null> => {
+    // 开发模式返回dev token
+    if (import.meta.env.DEV && user?.id?.startsWith('dev-')) {
+      return `dev-${user.role}`
+    }
+
     const {
       data: { session },
     } = await supabase.auth.getSession()

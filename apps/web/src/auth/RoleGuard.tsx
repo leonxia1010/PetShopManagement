@@ -17,6 +17,13 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({
 }) => {
   const { user } = useAuth()
 
+  // 开发模式调试
+  if (import.meta.env.DEV) {
+    console.log('RoleGuard - user:', user)
+    console.log('RoleGuard - required roles:', roles)
+    console.log('RoleGuard - user role:', user?.role)
+  }
+
   if (!user) {
     return null // AuthGate should handle this case
   }

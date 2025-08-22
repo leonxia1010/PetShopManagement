@@ -11,6 +11,13 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
   const { user, loading } = useAuth()
   const location = useLocation()
 
+  // 开发模式调试
+  if (import.meta.env.DEV) {
+    console.log('AuthGate - user:', user)
+    console.log('AuthGate - loading:', loading)
+    console.log('AuthGate - location:', location.pathname)
+  }
+
   if (loading) {
     return (
       <Box
