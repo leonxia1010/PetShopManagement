@@ -49,14 +49,20 @@ npm install -g pnpm
 
 ## ⚠️ 重要提示
 
-**本指南已更新适配 2024 年最新版 Supabase 界面！**
+**本指南已更新适配 2025 年最新版 Supabase 界面！**
 
-如果你看到的 Supabase 控制台界面与说明不完全一致，请参考以下重点：
+根据你的截图，2025 年的 Supabase 导航结构如下：
 
-- **Authentication > Providers** - 这里配置邮箱登录
-- **Authentication > Settings** - 这里配置 URL 和邮件确认
-- **Settings > API** - 这里获取 API 密钥
-- **Authentication > Users** - 这里管理用户和角色
+- **🔐 Authentication** - 认证相关的所有设置（如你截图中高亮显示）
+- **⚙️ Project Settings** - 项目设置和 API 密钥
+- **📊 Database** - 数据库管理和表编辑
+- **📝 SQL Editor** - SQL 查询编辑器（现在有 AI 助手功能）
+
+**关键导航路径：**
+- **邮箱登录配置**: `Authentication` 菜单下
+- **用户管理**: `Authentication` 菜单下  
+- **API 密钥**: `Project Settings` 菜单下
+- **数据库操作**: `Database` 或 `Table Editor` 菜单下
 
 ## 🚀 快速开始
 
@@ -95,29 +101,31 @@ cd ../..
 6. 点击 **"Create new project"**
 7. 等待 2-3 分钟项目初始化完成
 
-#### 3.2 配置邮箱认证提供商
+#### 3.2 配置邮箱认证（2025年新界面）
 
-1. 在左侧菜单点击 **"Authentication"**
-2. 点击 **"Providers"** 标签
-3. 找到 **"Email"** 提供商部分
-4. 确保 **"Enable Email provider"** 开关已开启（如你截图所示）
-5. 其他安全选项可根据需要调整：
-   - **"Secure email change"** - 建议开启
-   - **"Secure password change"** - 可选
-   - **"Prevent use of leaked passwords"** - 可选
+1. 在左侧菜单点击 **"🔐 Authentication"**（如你截图中所示）
+2. 进入 Authentication 页面后，查找认证提供商设置
+3. 找到 **"Email"** 提供商选项
+4. 确保邮箱认证已启用
+5. 根据需要配置安全选项：
+   - **邮箱验证** - 生产环境建议开启
+   - **安全邮箱变更** - 建议开启
+   - **密码泄露检测** - 可选
 
-#### 3.3 配置网站 URL 和重定向
+#### 3.3 配置网站 URL 和重定向（2025年新界面）
 
-1. 在 **"Authentication"** 页面，点击 **"URL Configuration"** 标签
-2. 或者点击 **"Settings"** 标签
-3. 找到以下设置并填入：
-   - **"Site URL"**: `http://localhost:5173`
-   - **"Redirect URLs"**: 添加以下两个 URL
+1. 仍在 **"🔐 Authentication"** 菜单下
+2. 寻找 **"URL Configuration"** 或类似的设置选项
+3. 配置以下重要设置：
+   - **网站 URL**: `http://localhost:5173`
+   - **重定向 URLs**: 添加以下 URL
      ```
      http://localhost:5173/auth/callback
      http://localhost:3000/auth/callback
      ```
-4. 点击 **"Save"** 保存设置
+4. 保存所有设置
+
+> **💡 2025年提示**: 如果界面布局与描述不符，所有认证相关设置都应该在 `🔐 Authentication` 菜单下，可能以不同的标签页或子菜单形式组织。
 
 #### 3.4 开发环境邮件设置（可选）
 
@@ -128,41 +136,44 @@ cd ../..
 3. 可以临时关闭 **"Enable email confirmations"** 以便快速测试
 4. 生产环境建议保持开启以确保安全
 
-#### 3.5 获取 API 密钥
+#### 3.5 获取 API 密钥（2025年新界面）
 
-1. 在左侧菜单点击 **"Settings"**
-2. 点击 **"API"** 标签
-3. 复制以下三个信息：
-   - **Project URL**（类似：`https://xxx.supabase.co`）
-   - **anon public key**（很长的一串字符）
-   - **service_role key**（另一串很长的字符，标记为"secret"）
+1. 在左侧菜单点击 **"⚙️ Project Settings"**（如你截图底部所示）
+2. 在项目设置中寻找 **"API"** 或 **"API Keys"** 部分
+3. 复制以下三个关键信息：
+   - **Project URL**（项目网址，类似：`https://xxx.supabase.co`）
+   - **anon public key**（匿名公钥，很长的字符串）
+   - **service_role key**（服务角色密钥，标记为"secret"，非常重要！）
 
-#### 3.6 创建测试用户
+> **🔑 安全提醒**: service_role key 具有管理员权限，只能在后端使用，绝不要在前端代码中暴露！
 
-**重要说明：** 新版 Supabase 推荐使用 Magic Link 或 OTP 方式，我们将通过登录流程创建用户。
+#### 3.6 创建测试用户（2025年新界面）
 
-**方式一：手动在控制台创建（可选）**
+**重要说明：** 2025 年版本支持多种用户创建方式，包括新的 AI 助手功能帮助。
 
-1. 在左侧菜单点击 **"Authentication"**
-2. 点击 **"Users"** 标签
-3. 点击 **"Add user"** 创建测试账号：
-   - 输入邮箱：`manager@test.com`
-   - 可以设置临时密码或留空
-   - 点击 **"Create user"**
-4. 重复创建 `clerk@test.com` 和 `technician@test.com`
+**方式一：控制台手动创建**
+
+1. 在左侧菜单点击 **"🔐 Authentication"**
+2. 在 Authentication 页面寻找 **"Users"** 部分或标签
+3. 点击 **"Add user"** 或类似的创建按钮
+4. 创建以下测试账号：
+   - `manager@test.com`（店长账号）
+   - `clerk@test.com`（前台账号）
+   - `technician@test.com`（技师账号）
+5. 2025年版本可能支持批量创建，查找相关功能
 
 **方式二：通过应用注册（推荐）**
 
-直接在应用中使用邮箱登录，系统会自动创建用户。
+直接在我们的应用中使用邮箱登录，系统自动创建用户。
 
-#### 3.7 设置用户角色
+#### 3.7 设置用户角色（2025年新功能）
 
-对每个用户设置角色：
+**2025年可能的新方式：**
 
-1. 点击用户邮箱进入详情页
-2. 找到 **"Raw User Meta Data"** 部分
-3. 点击右侧的编辑按钮（铅笔图标）
-4. 根据用户类型输入对应的 JSON：
+1. 在 **"🔐 Authentication"** 下找到用户管理
+2. 点击用户进入详情页
+3. 寻找 **"User Metadata"** 或 **"Custom Claims"** 部分
+4. 根据用户类型设置角色 JSON：
 
 **店长角色** (`manager@test.com`)：
 ```json
@@ -295,15 +306,25 @@ curl -H "Authorization: Bearer clerk的token" http://localhost:3000/api/auth/man
 - 开发环境可以暂时关闭 **"Enable email confirmations"**
 - 可以在 **Authentication > Users** 页面查看用户状态
 
-### 1.1 新版界面找不到设置？
+### 1.1 2025年新界面找不到设置？
 
-**如果界面与说明不符，尝试以下位置：**
+**根据你的截图，2025年界面导航结构：**
 
-- **邮箱登录设置**: `Authentication → Providers → Email`  
-- **URL 配置**: `Authentication → Settings → General` 或 `URL Configuration`
-- **用户管理**: `Authentication → Users`
-- **API 密钥**: `Settings → API`
-- **邮件模板**: `Authentication → Email Templates`
+- **🔐 邮箱登录设置**: `Authentication` 菜单（你截图中高亮的位置）
+- **👥 用户管理**: `Authentication` 菜单下的用户部分
+- **🔑 API 密钥**: `Project Settings` 菜单（你截图底部）
+- **📊 数据库查看**: `Database` 或 `Table Editor` 菜单
+- **💾 SQL 操作**: `SQL Editor` 菜单（现支持 AI 助手）
+
+**🆕 2025年新特性：**
+- **AI 助手**: 在 SQL Editor 中按 `CMD+K` 获得 AI 帮助
+- **增强安全**: AI 助手可帮助解决安全和性能问题  
+- **代码编辑**: Edge Functions 现在支持直接代码编辑
+
+**❓ 如果还是找不到设置：**
+- 检查是否在正确的项目中
+- 刷新浏览器页面
+- 确认账号有足够权限
 
 ### 2. 环境变量配置错误？
 
@@ -380,5 +401,26 @@ pnpm db:push
 2. 查看后端服务器日志
 3. 确认 Supabase 项目设置正确
 4. 检查网络连接
+5. **🆕 使用 Supabase AI 助手** - 在 SQL Editor 中按 `CMD+K`
 
-现在你可以开始开发宠物店管理系统了！🎉
+## 🌟 2025年版本特别说明
+
+根据你提供的截图和最新信息，我已经更新了所有设置步骤以适配 2025 年的 Supabase 界面。
+
+**✨ 主要变化：**
+- 导航菜单重新组织，更加直观（如你截图所示）
+- 新增 AI 助手功能辅助开发和问题解决
+- 安全性和性能监控增强
+- 用户体验大幅改善
+
+**🎯 现在你可以：**
+1. 按照更新的中文指南设置你的 Supabase 项目
+2. 利用 2025 年的新功能提升开发效率
+3. 享受更好的界面体验和 AI 辅助
+
+**📞 需要帮助？**
+- 优先查看最新的导航结构说明
+- 利用 Supabase 内置的 AI 助手（CMD+K）
+- 随时向我反馈界面变化和问题
+
+现在开始你的宠物店管理系统开发之旅吧！🚀
