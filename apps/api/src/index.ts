@@ -3,6 +3,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
+import authRoutes from './routes/auth'
 
 dotenv.config()
 
@@ -14,6 +15,7 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 
+// Health check routes
 app.get('/healthz', (req, res) => {
   res.json({ status: 'ok' })
 })
@@ -21,6 +23,9 @@ app.get('/healthz', (req, res) => {
 app.get('/api/healthz', (req, res) => {
   res.json({ status: 'ok' })
 })
+
+// Authentication and protected routes
+app.use('/api/auth', authRoutes)
 
 const startServer = async () => {
   try {
